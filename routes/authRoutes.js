@@ -4,6 +4,7 @@ const { authMiddleware } = require("../middleware/authMiddleware");
 const { loginLimiter, otpLimiter } = require("../middleware/rateLimiter");
 const { validateLogin, validateRegister } = require("../middleware/validation");
 const checkBlacklist = require("../middleware/tokenBlacklistMiddleware");
+const requireRole = require("../middleware/roleMiddleware");
 
 
 const router = express.Router();
@@ -17,6 +18,11 @@ router.post("/login", validateLogin, loginLimiter, login);
 
 // Logout
 router.post("/logout", authMiddleware, checkBlacklist, logout);
+
+// Route nur für Admins
+router.get("/admin", authMiddleware, requireRole("admin"), (req, res) => {
+  res.json({ message: "Willkommen, Admin!" });
+});
 
 
 

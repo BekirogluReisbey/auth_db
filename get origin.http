@@ -1,7 +1,9 @@
 
 // ABfrage
-# POST http://localhost:5000/api/auth/login
-# Origin: https://böse-seite.com
+GET  http://localhost:5000/api/protected
+X-CSRF-Token: 5ZzLh4Rb-GcpvClugMkJRybZXzOs7OP4tmlU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0MDc0NzY0NywiZXhwIjoxNzQwNzUxMjQ3fQ._8xNmd5dxMtrFT2GGugCi2xVnTO6f_kuBHT4IKVptfM
 
-GET http://localhost:5000/api/csrf-token
-Origin: http://localhost:3000
+
+# GET http://localhost:5000/api/csrf-token
+# Origin: http://localhost:3000

@@ -8,7 +8,7 @@ const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const csrfProtection = require("./middleware/csrfMiddleware");
 const authRoutes = require("./routes/authRoutes");
-const cleanupExpiredTokens = require("./utils/cleanupBlacklist");
+//const cleanupExpiredTokens = require("./utils/cleanupBlacklist");
 
 const app = express();
 const PORT = process.env.PORT || 5000;

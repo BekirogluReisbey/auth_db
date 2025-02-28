@@ -19,6 +19,8 @@ exports.authMiddleware = async (req, res, next) => {
     const decoded = jwt.verify(token, JWT_SECRET);
     console.log("Token erfolgreich decodiert:", decoded); // Log hinzufügen
     req.user = decoded;
+    console.log("✅ Auth-Middleware: Token validiert, Benutzer-ID:", decoded.userId);
+
     next();
   } catch (error) {
     console.error("Fehler bei der Token-Validierung:", error); // Log hinzufügen

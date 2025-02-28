@@ -16,7 +16,8 @@ exports.register = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { email, password } = req.body;
+  // Sicherstellen, dass die Rolle als Option im Request-Body vorhanden ist
+  const { email, password, role = "user" } = req.body; // Default-Wert "user" wenn keine Rolle angegeben ist
 
   try {
     // Prüfen, ob der Benutzer existiert
@@ -28,17 +29,29 @@ exports.register = async (req, res) => {
     // Passwort hashen
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const userRole = await prisma.role.findUnique({ where: { name: role } });
+    console.log("🔍 Gefundene Rolle:", userRole);
+    
+    if (!userRole) {
+      return res.status(400).json({ message: "Ungültige Rolle!" });
+    }
+
     // Benutzer in der Datenbank speichern
     const newUser = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
+        roleId: userRole.id,
       },
     });
 
     res.status(201).json({ message: "Registrierung erfolgreich!", userId: newUser.id });
   } catch (error) {
-    res.status(500).json({ message: "Fehler beim Registrieren", error });
+    console.error("❌ Fehler beim Registrieren:", error);
+    res.status(500).json({ 
+      message: "Fehler beim Registrieren",
+      error: error.message || error.toString() || "Unbekannter Fehler" 
+    });
   }
 };
 
@@ -59,8 +72,12 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: "Ungültige E-Mail oder Passwort" });
     }
 
-    // JWT-Token erstellen
-    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "1h" });
+    // JWT-Token erstellen, die Rolle des Benutzers einbeziehen
+    const token = jwt.sign(
+      { userId: user.id, role: user.role }, // Die Rolle hier einbeziehen
+      JWT_SECRET,
+      { expiresIn: "1h" }
+    );
 
     res.json({ message: "Login erfolgreich", token });
   } catch (error) {
@@ -73,29 +90,41 @@ exports.login = async (req, res) => {
 // Logout (Token zur Blacklist hinzufügen)
 exports.logout = async (req, res) => {
   try {
+    console.log("🔍 Logout gestartet...");
+
     const token = req.headers.authorization?.split(" ")[1];
+    console.log("🔑 Erhaltener Token:", token);
 
     if (!token) {
       return res.status(401).json({ message: "Kein Token vorhanden" });
     }
 
-    // Ablaufdatum aus Token extrahieren
-    const decodedToken = jwt.verify(token, JWT_SECRET);
-    const expirationDate = new Date(decodedToken.exp * 1000); // In Millisekunden umrechnen
+    const decodedToken = jwt.decode(token);
+    console.log("📜 Dekodiertes Token:", decodedToken);
 
-    // Token in Blacklist speichern
-    await BlacklistedToken.create({
+    if (!decodedToken || !decodedToken.exp) {
+      return res.status(400).json({ message: "Ungültiges Token" });
+    }
+
+    const expirationDate = new Date(decodedToken.exp * 1000);
+    console.log("📅 Ablaufdatum des Tokens:", expirationDate);
+
+    // Token in die Blacklist speichern
+    await prisma.blacklistedToken.create({
       data: {
-      token: token,
-    },
-  });
+        token: token,
+        expiresAt: expirationDate,
+      },
+    });
 
+    console.log("✅ Token erfolgreich auf Blacklist gesetzt!");
     res.json({ message: "Logout erfolgreich" });
   } catch (error) {
-    console.error("Fehler beim Logout:", error);
-    res.status(500).json({ message: "Fehler beim Logout" });
+    console.error("❌ Fehler beim Logout:", error);
+    res.status(500).json({ message: "Fehler beim Logout", error });
   }
 };
+
 
 
 
