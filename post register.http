@@ -1,0 +1,13 @@
+
+// Registrierung
+
+POST http://localhost:5000/api/auth/register
+X-CSRF-Token: 5v1PQHTW-0IPpnMG-dcLoBOeLamqTRsePJsk
+content-type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "Passwort123"
+}
+
+

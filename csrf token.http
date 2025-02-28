@@ -1,0 +1,3 @@
+
+// ABfrage
+GET http://localhost:5000/api/csrf-token

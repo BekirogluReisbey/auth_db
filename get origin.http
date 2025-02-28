@@ -1,0 +1,7 @@
+
+// ABfrage
+# POST http://localhost:5000/api/auth/login
+# Origin: https://böse-seite.com
+
+GET http://localhost:5000/api/csrf-token
+Origin: http://localhost:3000

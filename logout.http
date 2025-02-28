@@ -1,0 +1,6 @@
+//Logout
+
+
+POST http://localhost:5000/api/protected-action
+X-CSRF-Token: 5v1PQHTW-0IPpnMG-dcLoBOeLamqTRsePJsk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0MDczNTMzNSwiZXhwIjoxNzQwNzM4OTM1fQ.auIL8nAarE_lEw4PTxi-pOChZGlZ-cBnIgaXTz6vGlI
