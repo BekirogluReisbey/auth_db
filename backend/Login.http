@@ -1,0 +1,8 @@
+POST http://localhost:5000/api/auth/login
+X-CSRF-Token: 5ZzLh4Rb-GcpvClugMkJRybZXzOs7OP4tmlU
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "123456"
+}

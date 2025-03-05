@@ -1,0 +1,5 @@
+
+// ABfrage
+
+GET http://localhost:5000/api/auth/protected
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0MDY0Mjk5NiwiZXhwIjoxNzQwNjQ2NTk2fQ.0CVpCJOl5kGZPXSziS1nWlHSNOf5utjRbrPAIB57-X8
